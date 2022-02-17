@@ -4,6 +4,7 @@ import { useState } from "react";
 import Caver from "caver-js";
 import ST_ADDRESS from "../contractInfo/STCONTRACT/ADDRESS.json";
 import ST_ABI from "../contractInfo/STCONTRACT/ABI.json";
+import axios from "axios";
 
 const MakeNFT = () => {
   const caver = new Caver(window.klaytn);
