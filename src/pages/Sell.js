@@ -1,6 +1,7 @@
 import { Box, TextField, Button } from "@mui/material";
 import { useState } from "react";
 import Caver from "caver-js";
+import axios from "axios";
 
 import ST_ADDRESS from "../contractInfo/STCONTRACT/ADDRESS.json";
 import TS_ADDRESS from "../contractInfo/TSCONTRACT/ADDRESS.json";
@@ -11,11 +12,9 @@ const Sell = () => {
   const caver = new Caver(window.klaytn);
   const STCONTRACT = new caver.klay.Contract(ST_ABI, ST_ADDRESS);
   const TSCONTRACT = new caver.klay.Contract(TS_ABI, TS_ADDRESS);
-  const feePayer = caver.klay.accounts.wallet.add(
-    //클레이튼 개인키로 추가해줍니다.
-    "0x8cafa33df8c1740720bc4815ce7c7cd61d18aaf396bb2a3da5e197f0c7b85aff"
-  );
+
   const [sid, setSid] = useState("");
+  const [price, setPrice] = useState(0);
 
   const approve = async () => {
     const { rawTransaction: senderRawTransaction } =
@@ -29,14 +28,11 @@ const Sell = () => {
         gas: "5000000",
         value: caver.utils.toPeb("0", "KLAY"),
       });
-    caver.klay
-      .sendTransaction({
-        senderRawTransaction: senderRawTransaction,
-        feePayer: feePayer.address,
+    axios
+      .post("http://localhost:5000/fee-delegated", {
+        transaction: senderRawTransaction,
       })
-      .then((receipt) => {
-        console.log(receipt.transactionHash);
-      });
+      .then((res) => console.log(res.data));
   };
   const cancelApprove = async () => {
     const { rawTransaction: senderRawTransaction } =
@@ -51,14 +47,11 @@ const Sell = () => {
         value: caver.utils.toPeb("0", "KLAY"),
       });
 
-    caver.klay
-      .sendTransaction({
-        senderRawTransaction: senderRawTransaction,
-        feePayer: feePayer.address,
+    axios
+      .post("http://localhost:5000/fee-delegated", {
+        transaction: senderRawTransaction,
       })
-      .then((receipt) => {
-        console.log(receipt.transactionHash);
-      });
+      .then((res) => console.log(res.data));
   };
   const sellNFT = async () => {
     const _sid = parseInt(sid, 10);
@@ -68,22 +61,17 @@ const Sell = () => {
         from: window.klaytn.selectedAddress,
         to: TS_ADDRESS,
         data: TSCONTRACT.methods
-          .setForSale(_sid, caver.utils.toPeb("1", "KLAY"))
+          .setForSale(_sid, caver.utils.toPeb(price, "KLAY"))
           .encodeABI(),
         gas: "500000",
         value: caver.utils.toPeb("0", "KLAY"),
       });
 
-    caver.klay
-      .sendTransaction({
-        senderRawTransaction: senderRawTransaction,
-        feePayer: feePayer.address,
+    axios
+      .post("http://localhost:5000/fee-delegated", {
+        transaction: senderRawTransaction,
       })
-      .then(function (receipt) {
-        if (receipt.transactionHash) {
-          console.log(receipt.transactionHash);
-        }
-      });
+      .then((res) => console.log(res.data));
   };
   return (
     <>
@@ -92,6 +80,12 @@ const Sell = () => {
         variant="outlined"
         label="학번"
         onChange={(e) => setSid(e.target.value)}
+      />
+      <TextField
+        id="price"
+        variant="outlined"
+        label="가격(KLAY)"
+        onChange={(e) => setPrice(e.target.value)}
       />
       <br />
       <Button onClick={() => approve(sid)}>토큰 판매 승인하기</Button>

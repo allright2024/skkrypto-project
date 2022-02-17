@@ -5,19 +5,24 @@ import Caver from "caver-js";
 import ST_ADDRESS from "../contractInfo/STCONTRACT/ADDRESS.json";
 import ST_ABI from "../contractInfo/STCONTRACT/ABI.json";
 import axios from "axios";
+import ipfsClient from "ipfs-http-client";
 
 const MakeNFT = () => {
   const caver = new Caver(window.klaytn);
   const STCONTRACT = new caver.klay.Contract(ST_ABI, ST_ADDRESS);
-  const feePayer = caver.klay.accounts.wallet.add(
-    "0x8cafa33df8c1740720bc4815ce7c7cd61d18aaf396bb2a3da5e197f0c7b85aff"
-  );
+  const ipfs = ipfsClient({
+    host: "ipfs.infura.io",
+    port: "5001",
+    protocol: "https",
+  });
+
   const [name, setName] = useState("");
   const [num, setNum] = useState("");
   const [sid, setSid] = useState("");
   const [position, setPosition] = useState("");
   const [duration, setDuration] = useState("");
   const [url, setUrl] = useState("");
+  const [ipfscontent, setIpfscontent] = useState("");
   const makeNFT = async () => {
     const _num = parseInt(num, 10);
     const _sid = parseInt(sid, 10);
@@ -34,60 +39,96 @@ const MakeNFT = () => {
         gas: "50000000",
         value: caver.utils.toPeb("0", "KLAY"),
       });
-    caver.klay
-      .sendTransaction({
-        senderRawTransaction: senderRawTransaction,
-        feePayer: feePayer.address,
+    axios
+      .post("http://localhost:5000/fee-delegated", {
+        transaction: senderRawTransaction,
       })
-      .then((receipt) => {
-        console.log(receipt.transactionHash);
-      });
+      .then((res) => console.log(res.data));
+  };
+
+  const makeIPFSURL = async () => {
+    const res = await ipfs.add(
+      Buffer.from(
+        JSON.stringify({
+          title: "skkrypto",
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              description: name,
+            },
+            sid: {
+              type: "string",
+              description: sid,
+            },
+            url: {
+              type: "url",
+              description: ipfscontent,
+            },
+          },
+        })
+      )
+    );
+    console.log("https://ipfs.infura.io/ipfs/" + res[0].hash);
   };
   return (
     <>
       <TextField
         id="name"
-        label="이름"
+        label="이름(문자열)"
         onChange={(e) => setName(e.target.value)}
         variant="outlined"
       />
       <br />
       <TextField
-        id="num"
-        label="기수"
-        onChange={(e) => setNum(e.target.value)}
-        variant="outlined"
-      />
-      <br />
-      <TextField
         id="sid"
-        label="학번"
+        label="학번(숫자)"
         onChange={(e) => setSid(e.target.value)}
         variant="outlined"
       />
       <br />
       <TextField
+        id="ipfs"
+        label="ipfs에 올릴 정보(문자열)"
+        onChange={(e) => setIpfscontent(e.target.value)}
+        variant="outlined"
+      />
+      <br />
+      <Button onClick={makeIPFSURL}>ipfs에 업로드하기</Button>
+      <br />
+      <br />
+
+      <TextField
+        id="num"
+        label="기수(숫자)"
+        onChange={(e) => setNum(e.target.value)}
+        variant="outlined"
+      />
+      <br />
+
+      <TextField
         id="position"
-        label="직무"
+        label="직무(문자열)"
         onChange={(e) => setPosition(e.target.value)}
         variant="outlined"
       />
       <br />
       <TextField
         id="duration"
-        label="활동 기간"
+        label="활동 기간(문자열)"
         onChange={(e) => setDuration(e.target.value)}
         variant="outlined"
       />
       <br />
       <TextField
         id="ipfsurl"
-        label="url"
+        label="url(문자열)"
         onChange={(e) => setUrl(e.target.value)}
         variant="outlined"
       />
       <br />
       <Button onClick={makeNFT}>내 NFT만들기</Button>
+      <br />
     </>
   );
 };
