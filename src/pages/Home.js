@@ -1,6 +1,6 @@
-import { Button, Link } from "@mui/material";
-import Caver from "caver-js";
-import { useState } from "react";
+import { Button, Link } from '@mui/material';
+import Caver from 'caver-js';
+import { useState } from 'react';
 const Home = () => {
   const [kasAccount, setKasAccount] = useState();
   const activateKaikas = async () => {
@@ -10,8 +10,10 @@ const Home = () => {
 
   return (
     <>
-      <Button onClick={activateKaikas}>로그인하기</Button>
-      <div>{kasAccount}</div>
+      <div style={{ textAlign: 'center', marginTop: '10%' }}>
+        <Button onClick={activateKaikas}>Kaikas 로그인하기</Button>
+        <div>{kasAccount}</div>
+      </div>
     </>
   );
 };
