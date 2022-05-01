@@ -5,10 +5,10 @@ import Caver from 'caver-js';
 import GT_ADDRESS from '../contractInfo/GTCONTRACT/ADDRESS.json';
 import GT_ABI from '../contractInfo/GTCONTRACT/ABI.json';
 const unityContext = new UnityContext({
-  loaderUrl: 'Build/myunityapp.loader.js',
-  dataUrl: 'Build/myunityapp.data.unityweb',
-  frameworkUrl: 'Build/myunityapp.framework.js.unityweb',
-  codeUrl: 'Build/myunityapp.wasm.unityweb',
+  loaderUrl: 'Build/withselect.loader.js',
+  dataUrl: 'Build/withselect.data.unityweb',
+  frameworkUrl: 'Build/withselect.framework.js.unityweb',
+  codeUrl: 'Build/withselect.wasm.unityweb',
 });
 
 export default function Game() {
