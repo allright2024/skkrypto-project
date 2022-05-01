@@ -155,13 +155,15 @@ const MySellingToken = () => {
   };
 
   const purchase = async (tokenId, tokenPrice) => {
+    console.log(tokenPrice);
+    let stringTokenPrice = tokenPrice.toString();
     const { rawTransaction: senderRawTransaction } = await caver.klay.signTransaction({
       type: 'FEE_DELEGATED_SMART_CONTRACT_EXECUTION',
       from: window.klaytn.selectedAddress,
       to: TS_ADDRESS,
       data: TSCONTRACT.methods.purchaseToken(tokenId).encodeABI(),
       gas: '500000',
-      value: caver.utils.toPeb(tokenPrice, 'KLAY'),
+      value: caver.utils.toPeb(stringTokenPrice, 'KLAY'),
     });
 
     axios

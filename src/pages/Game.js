@@ -40,6 +40,7 @@ export default function Game() {
       <Button onClick={activateKaikas}>계정 인증하기</Button>
       <span>{kasAccount}</span>
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '5%' }}>
+        <Button></Button>
         {kasAccount !== null && balance > 0 && <Unity unityContext={unityContext} style={{ textAlign: 'center', width: '50%', height: '50%' }} />}
       </div>
     </>
