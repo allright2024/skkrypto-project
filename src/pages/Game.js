@@ -62,7 +62,7 @@ export default function Game() {
       {balance > 1 && <Button onClick={selectPinkMan}>Pink man</Button>}
       {balance == 2 && <div>nft를 1개 더 구매하시면 ninja frog로 플레이하실 수 있습니다.</div>}
       {balance > 2 && <Button onClick={selectNinjaFrog}>Ninja Frog</Button>}
-      {balance == 2 && <div>nft를 1개 더 구매하시면 ninja frog로 플레이하실 수 있습니다.</div>}
+      {balance == 2 && <div>nft를 1개 더 구매하시면 MaskDude로 플레이하실 수 있습니다.</div>}
       {balance > 3 && <Button onClick={selectMask}>Mask Dude</Button>}
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '5%' }}>
         {kasAccount !== null && balance > 0 && <Unity unityContext={unityContext} style={{ textAlign: 'center', width: '50%', height: '50%' }} />}
