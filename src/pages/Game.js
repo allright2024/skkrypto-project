@@ -35,12 +35,36 @@ export default function Game() {
     setBalance(result);
   }, [kasAccount]);
 
+  const selectVirtualGuy = () => {
+    unityContext.send('SkinManager', 'SelectVirtualGuy');
+  };
+
+  const selectPinkMan = () => {
+    unityContext.send('SkinManager', 'SelectPinkGuy');
+  };
+
+  const selectNinjaFrog = () => {
+    unityContext.send('SkinManager', 'SelectNinjaFrog');
+  };
+
+  const selectMask = () => {
+    unityContext.send('SkinManager', 'SelectMaskDude');
+  };
+
   return (
     <>
-      <Button onClick={activateKaikas}>계정 인증하기</Button>
+      <Button onClick={activateKaikas}>계정 인증하고 게임하기</Button>
       <span>{kasAccount}</span>
+      <br />
+      {balance == 0 && <div>nft를 구매하셔야 게임을 할 수 있습니다.</div>}
+      {balance > 0 && <Button onClick={selectVirtualGuy}>virtual guy</Button>}
+      {balance == 1 && <div>nft를 1개 더 구매하시면 pinkman으로 플레이하실 수 있습니다.</div>}
+      {balance > 1 && <Button onClick={selectPinkMan}>Pink man</Button>}
+      {balance == 2 && <div>nft를 1개 더 구매하시면 ninja frog로 플레이하실 수 있습니다.</div>}
+      {balance > 2 && <Button onClick={selectNinjaFrog}>Ninja Frog</Button>}
+      {balance == 2 && <div>nft를 1개 더 구매하시면 ninja frog로 플레이하실 수 있습니다.</div>}
+      {balance > 3 && <Button onClick={selectMask}>Mask Dude</Button>}
       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '5%' }}>
-        <Button></Button>
         {kasAccount !== null && balance > 0 && <Unity unityContext={unityContext} style={{ textAlign: 'center', width: '50%', height: '50%' }} />}
       </div>
     </>
